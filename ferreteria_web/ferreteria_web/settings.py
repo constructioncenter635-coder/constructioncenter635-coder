@@ -1,9 +1,10 @@
 from pathlib import Path
 from decimal import Decimal
 import os
+import dj_database_url  # para manejar DB en Render
 
 # Base del proyecto
-BASE_DIR = Path(__file__).resolve().parent.parent  # ahora es Path, puedes usar /
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Constantes adicionales
 TAX_RATE = Decimal('0.18')   # IGV = 18%
@@ -11,9 +12,11 @@ SMARTCLICK_URL = 'https://your-smartclick-url.example/emit'
 SMARTCLICK_METHOD = 'GET'
 SMARTCLICK_API_KEY = ''
 
-# Clave secreta para desarrollo
-SECRET_KEY = 'center2025'
-DEBUG = os.getenv("DEBUG", "True") == "True"
+# Clave secreta (en producción la maneja Render como variable de entorno)
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "center2025")
+
+# Seguridad y Debug
+DEBUG = os.getenv("DEBUG", "False") == "True"
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
@@ -40,7 +43,7 @@ INSTALLED_APPS = [
 # Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    "whitenoise.middleware.WhiteNoiseMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # whitenoise para estáticos
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -56,7 +59,7 @@ ROOT_URLCONF = 'ferreteria_web.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],  # ahora funciona porque BASE_DIR es Path
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -73,20 +76,21 @@ WSGI_APPLICATION = 'ferreteria_web.wsgi.application'
 
 # Base de datos
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    "default": dj_database_url.config(
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        conn_max_age=600,
+        ssl_require=False
+    )
 }
 
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
 
 # Validación de contraseñas
 AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',},
+    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
 # Localización
@@ -98,14 +102,13 @@ USE_TZ = True
 # Archivos estáticos
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
-# Opcional recomendado (mejor rendimiento):
+# whitenoise optimizado
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Configuración adicional
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = '/login/'
-LOGOUT_REDIRECT_URL = '/login/'
 LOGOUT_REDIRECT_URL = '/login/'
