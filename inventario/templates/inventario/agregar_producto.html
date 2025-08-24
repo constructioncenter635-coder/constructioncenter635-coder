@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Agregar Producto</h2>
+
+  <form method="post" novalidate>
+    {% csrf_token %}
+
+    <div class="mb-3">
+      <label>Nombre</label>
+      {% render_field form.nombre class="form-control" %}
+    </div>
+
+    <div class="mb-3">
+      <label>Marca</label>
+      {% render_field form.marca class="form-control" %}
+    </div>
+
+    <div class="mb-3">
+      <label>Categoría</label>
+      {% render_field form.categoria class="form-select" %}
+    </div>
+
+    <div class="mb-3">
+      <label>Cantidad</label>
+      {% render_field form.cantidad class="form-control" %}
+    </div>
+
+    <div class="mb-3">
+      <label>Unidad de Medida</label>
+      {% render_field form.unidad_medida class="form-control" %}
+    </div>
+
+    <div class="mb-3">
+      <label>Precio de Compra (S/)</label>
+      {% render_field form.precio_compra class="form-control" %}
+    </div>
+
+    <div class="mb-3">
+      <label>% Ganancia</label>
+      {% render_field form.porcentaje_ganancia class="form-control" %}
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar Producto</button>
+  </form>
+</div>
+{% endblock %}

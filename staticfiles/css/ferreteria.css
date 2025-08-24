@@ -1,0 +1,94 @@
+/* ==========================
+   Navbar fija superior
+========================== */
+.navbar {
+    background-color: #0b0c10; /* azul noche oscuro */
+    box-shadow: 0 4px 15px rgba(0, 255, 255, 0.2);
+    padding: 15px 30px;
+    position: absolute;  /* Fija en la parte superior */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Logo y nombre */
+.navbar-brand {
+    color: #66fcf1 !important; /* azul neón */
+    font-weight: 700;
+    font-size: 1.6rem;
+    letter-spacing: 1px;
+    text-shadow: 0 0 5px #66fcf1, 0 0 10px #66fcf1;
+}
+
+.navbar-brand img {
+    height: 40px;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+/* Links / botones */
+.navbar .nav-link {
+    color: #ffffff !important;
+    font-weight: 600;
+    margin-left: 15px;
+    padding: 8px 15px;
+    border-radius: 12px;
+    transition: all 0.3s;
+}
+
+/* Hover neón */
+.navbar .nav-link:hover {
+    background-color: #66fcf1;
+    color: #0b0c10 !important;
+    box-shadow: 0 0 10px #66fcf1, 0 0 20px #66fcf133;
+    transform: scale(1.05);
+}
+
+/* Botón destacado */
+.navbar .nav-link.btn-highlight {
+    background-color: #45a29e; /* verde azulado */
+    color: #0b0c10 !important;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.navbar .nav-link.btn-highlight:hover {
+    background-color: #66fcf1;
+    color: #0b0c10 !important;
+    box-shadow: 0 0 15px #66fcf1, 0 0 25px #45a29e33;
+    transform: scale(1.05);
+}
+
+/* Ajuste del contenido principal para no taparlo por la navbar */
+body main.container {
+    margin-top: 90px; /* suficiente espacio para la barra superior */
+}
+
+.highlight {
+    background-color: #fff176; /* amarillo suave */
+    color: #0d0d2b; /* texto oscuro */
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+.table th, .table td {
+    padding: 12px 15px;
+    vertical-align: middle;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f0f0f0;
+    color: #0d0d2b;
+    transition: 0.3s;
+}
+
+.highlight {
+    background-color: #fff3a3; /* amarillo suave */
+    color: #0b0c10;           /* texto oscuro */
+    padding: 2px 4px;
+    border-radius: 3px;
+}
