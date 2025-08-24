@@ -1,1 +1,3 @@
-web: gunicorn ferreteria_web.wsgi --chdir ferreteria_web
+web:
+gunicorn
+ferreteria_web.wsgi
