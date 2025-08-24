@@ -1,3 +1,2 @@
-web:
-gunicorn
-ferreteria_web.wsgi
+web: gunicorn ferreteria_web.wsgi
+

@@ -1,2 +1,0 @@
-web: gunicorn ferreteria_web.wsgi
-
