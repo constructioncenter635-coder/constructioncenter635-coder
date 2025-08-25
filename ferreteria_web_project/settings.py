@@ -18,10 +18,11 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "center2025")
 # Seguridad y Debug
 DEBUG = os.getenv("DEBUG", "False") == "True"
 ALLOWED_HOSTS = [
-    "localhost",
-    "127.0.0.1",
-    os.getenv("RENDER_EXTERNAL_HOSTNAME", "")
+    'localhost',
+    '127.0.0.1',
+    'constructioncenter635-coder-1.onrender.com',  # <- tu URL de Render
 ]
+
 
 # Aplicaciones instaladas
 INSTALLED_APPS = [
@@ -77,11 +78,10 @@ WSGI_APPLICATION = 'ferreteria_web_project.wsgi.application'
 
 # Base de datos
 DATABASES = {
-    "default": dj_database_url.config(
-        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
-        conn_max_age=600,
-        ssl_require=False
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / "db.sqlite3",
+    }
 }
 
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
