@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Clave secreta y debug
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "center2025")
 DEBUG = True
-ALLOWED_HOSTS = ["*"]  # En producción, especificar dominios reales
+ALLOWED_HOSTS = ["*"]  # En producción, especifica dominios reales
 
 # Aplicaciones instaladas
 INSTALLED_APPS = [
@@ -31,7 +31,7 @@ INSTALLED_APPS = [
 # Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    "whitenoise.middleware.WhiteNoiseMiddleware",  # Whitenoise para estáticos
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # Whitenoise para archivos estáticos
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -64,21 +64,21 @@ TEMPLATES = [
 WSGI_APPLICATION = 'ferreteria_web_project.wsgi.application'
 
 # Base de datos
+# Por defecto usamos SQLite local para desarrollo
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+    }
+}
+
+# Para producción en Render, si algún día lo subes y tienes DATABASE_URL
 if os.getenv("RENDER") == "true":
-    # PostgreSQL en Render
     DATABASES = {
         "default": dj_database_url.config(
-            default=os.getenv('DATABASE_URL', 'postgresql://ferreteria_user:9eHX65ewvyXkCkPVciEufttwEnpEUGtc@dpg-d2lrf9vdiees73ca0nb0-a:5432/ferreteria_db_3ft9'),
+            default=os.getenv('DATABASE_URL'),
             conn_max_age=600
         )
-    }
-else:
-    # Local: SQLite
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
-        }
     }
 
 # Validación de contraseñas
@@ -91,7 +91,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Localización
 LANGUAGE_CODE = 'es'
-TIME_ZONE = 'America/Bogota'
+TIME_ZONE = 'America/Lima'  # Hora local Perú
 USE_I18N = True
 USE_TZ = True
 
@@ -111,10 +111,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = '/login/'
 LOGOUT_REDIRECT_URL = '/login/'
 
-# SmartClick
-SMARTCLICK_URL = "TU_URL_REAL_DE_SMARTCLICK"
-SMARTCLICK_METHOD = "GET"  # o POST según tu integración
-SMARTCLICK_API_KEY = "TU_API_KEY_DE_SMARTCLICK"
+# SmartClick real del proyecto
+SMARTCLICK_URL = "https://your-real-smartclick-url.com/emit"  # Poner la URL que tienes del proyecto
+SMARTCLICK_METHOD = "GET"  # o "POST" según tu integración
+SMARTCLICK_API_KEY = "TU_API_KEY_REAL_DE_SMARTCLICK"  # Tu API Key real
 
 # Constantes
 TAX_RATE = Decimal('0.18')  # IGV 18%
