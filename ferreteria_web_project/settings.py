@@ -1,37 +1,27 @@
+import os
 from pathlib import Path
 from decimal import Decimal
-import dj_database_url
-import os
 
-# Base del proyecto
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Clave secreta y debug
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "center2025")
 DEBUG = True
-ALLOWED_HOSTS = ["*"]  # En producción, especifica dominios reales
+ALLOWED_HOSTS = ["*"]
 
-# Aplicaciones instaladas
 INSTALLED_APPS = [
-    # apps de Django
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    # tu app inventario
     'inventario',
-
-    # widget tweaks
     'widget_tweaks',
 ]
 
-# Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    "whitenoise.middleware.WhiteNoiseMiddleware",  # Whitenoise para archivos estáticos
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -40,10 +30,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# URLs
 ROOT_URLCONF = 'ferreteria_web_project.urls'
 
-# Templates
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -60,11 +48,9 @@ TEMPLATES = [
     },
 ]
 
-# WSGI
 WSGI_APPLICATION = 'ferreteria_web_project.wsgi.application'
 
-# Base de datos
-# Por defecto usamos SQLite local para desarrollo
+# --- BASE DE DATOS ---
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -72,16 +58,6 @@ DATABASES = {
     }
 }
 
-# Para producción en Render, si algún día lo subes y tienes DATABASE_URL
-if os.getenv("RENDER") == "true":
-    DATABASES = {
-        "default": dj_database_url.config(
-            default=os.getenv('DATABASE_URL'),
-            conn_max_age=600
-        )
-    }
-
-# Validación de contraseñas
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
@@ -89,32 +65,21 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-# Localización
 LANGUAGE_CODE = 'es'
-TIME_ZONE = 'America/Lima'  # Hora local Perú
+TIME_ZONE = 'America/Lima'
 USE_I18N = True
 USE_TZ = True
 
-# Archivos estáticos
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-# Tamaño máximo de subida
-DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
-
-# Configuración adicional
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# Login
 LOGIN_URL = '/login/'
 LOGOUT_REDIRECT_URL = '/login/'
 
-# SmartClick real del proyecto
-SMARTCLICK_URL = "https://your-real-smartclick-url.com/emit"  # Poner la URL que tienes del proyecto
-SMARTCLICK_METHOD = "GET"  # o "POST" según tu integración
-SMARTCLICK_API_KEY = "TU_API_KEY_REAL_DE_SMARTCLICK"  # Tu API Key real
-
-# Constantes
-TAX_RATE = Decimal('0.18')  # IGV 18%
+SMARTCLICK_URL = "TU_URL_REAL_DE_SMARTCLICK"
+SMARTCLICK_METHOD = "GET"
+SMARTCLICK_API_KEY = "TU_API_KEY_REAL_DE_SMARTCLICK"
+TAX_RATE = Decimal('0.18')
