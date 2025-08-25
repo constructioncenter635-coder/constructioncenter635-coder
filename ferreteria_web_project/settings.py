@@ -16,13 +16,8 @@ SMARTCLICK_API_KEY = ''
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "center2025")
 
 # Seguridad y Debug
-DEBUG = os.getenv("DEBUG", "False") == "True"
-ALLOWED_HOSTS = [
-    'localhost',
-    '127.0.0.1',
-    'constructioncenter635-coder-1.onrender.com',  # <- tu URL de Render
-]
-
+DEBUG = True
+ALLOWED_HOSTS = ['*']
 
 # Aplicaciones instaladas
 INSTALLED_APPS = [
