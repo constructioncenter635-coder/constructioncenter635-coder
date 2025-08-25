@@ -1,23 +1,17 @@
 from pathlib import Path
 from decimal import Decimal
-import os
 import dj_database_url
+import os
 
-# ----------------------
 # Base del proyecto
-# ----------------------
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# ----------------------
-# Seguridad y Debug
-# ----------------------
+# Clave secreta y debug
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "center2025")
 DEBUG = True
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["*"]  # En producción, especificar dominios reales
 
-# ----------------------
 # Aplicaciones instaladas
-# ----------------------
 INSTALLED_APPS = [
     # apps de Django
     'django.contrib.admin',
@@ -34,12 +28,10 @@ INSTALLED_APPS = [
     'widget_tweaks',
 ]
 
-# ----------------------
 # Middleware
-# ----------------------
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    "whitenoise.middleware.WhiteNoiseMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # Whitenoise para estáticos
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -48,14 +40,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# ----------------------
 # URLs
-# ----------------------
 ROOT_URLCONF = 'ferreteria_web_project.urls'
 
-# ----------------------
 # Templates
-# ----------------------
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -72,18 +60,17 @@ TEMPLATES = [
     },
 ]
 
-# ----------------------
 # WSGI
-# ----------------------
 WSGI_APPLICATION = 'ferreteria_web_project.wsgi.application'
 
-# ----------------------
 # Base de datos
-# ----------------------
-# Detecta si estamos en Render
 if os.getenv("RENDER") == "true":
+    # PostgreSQL en Render
     DATABASES = {
-        "default": dj_database_url.config(conn_max_age=600)
+        "default": dj_database_url.config(
+            default=os.getenv('DATABASE_URL', 'postgresql://ferreteria_user:9eHX65ewvyXkCkPVciEufttwEnpEUGtc@dpg-d2lrf9vdiees73ca0nb0-a:5432/ferreteria_db_3ft9'),
+            conn_max_age=600
+        )
     }
 else:
     # Local: SQLite
@@ -94,11 +81,7 @@ else:
         }
     }
 
-DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
-
-# ----------------------
 # Validación de contraseñas
-# ----------------------
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
@@ -106,34 +89,32 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-# ----------------------
 # Localización
-# ----------------------
 LANGUAGE_CODE = 'es'
 TIME_ZONE = 'America/Bogota'
 USE_I18N = True
 USE_TZ = True
 
-# ----------------------
 # Archivos estáticos
-# ----------------------
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-# ----------------------
+# Tamaño máximo de subida
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
+
 # Configuración adicional
-# ----------------------
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Login
 LOGIN_URL = '/login/'
 LOGOUT_REDIRECT_URL = '/login/'
 
-# ----------------------
-# Constantes adicionales
-# ----------------------
-TAX_RATE = Decimal('0.18')   # IGV = 18%
-SMARTCLICK_URL = 'https://your-smartclick-url.example/emit'
-SMARTCLICK_METHOD = 'GET'
-SMARTCLICK_API_KEY = ''
+# SmartClick
+SMARTCLICK_URL = "TU_URL_REAL_DE_SMARTCLICK"
+SMARTCLICK_METHOD = "GET"  # o POST según tu integración
+SMARTCLICK_API_KEY = "TU_API_KEY_DE_SMARTCLICK"
+
+# Constantes
+TAX_RATE = Decimal('0.18')  # IGV 18%
