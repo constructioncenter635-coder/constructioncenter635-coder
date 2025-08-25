@@ -19,6 +19,11 @@ from django.contrib import messages
 from .models import Producto, Sale, SaleItem
 from .forms import SaleForm
 from decimal import Decimal, InvalidOperation
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.db.models import F, ExpressionWrapper, FloatField, Q
+from .models import Producto, Categoria
+
 
 # --------------------------
 # HISTORIAL DE CAJA
@@ -151,53 +156,44 @@ def importar_excel(request):
 # --------------------------
 @login_required
 def lista_productos(request):
-    query = request.GET.get('q', '')
-    categorias = Categoria.objects.all().order_by("nombre")
+    query = request.GET.get('q', '').strip()
+    categorias = Categoria.objects.all().order_by('nombre')
     valor_total_inventario = 0
     productos_por_categoria = {}
 
+    # Crear diccionario con id de categoría como clave
     for categoria in categorias:
-        productos_categoria = Producto.objects.filter(categoria=categoria).order_by("nombre")
-        productos_list = []
+        productos_por_categoria[categoria.id] = []
 
-        for p in productos_categoria:
-            precio_compra = p.precio_compra or 0
-            precio_venta = p.precio_venta or 0
-            cantidad = p.cantidad or 0
+    # Obtener productos con select_related para no hacer muchas consultas
+    productos = Producto.objects.select_related('categoria').all().order_by('categoria__nombre', 'nombre')
 
-            total_inversion = precio_compra * cantidad
-            ganancia = (precio_venta - precio_compra) * cantidad
-            porcentaje_ganancia = ((precio_venta - precio_compra) / precio_compra * 100) if precio_compra > 0 else 0
+    if query:
+        productos = productos.filter(Q(nombre__icontains=query) | Q(marca__icontains=query))
 
-            valor_total_inventario += total_inversion
+    # Llenar diccionario y calcular totales
+    for p in productos:
+        precio_compra = p.precio_compra or 0
+        precio_venta = p.precio_venta or 0
+        cantidad = p.cantidad or 0
 
-            productos_list.append({
-                'obj': p,
-                'total_inversion': total_inversion,
-                'ganancia': ganancia,
-                'porcentaje_ganancia': porcentaje_ganancia,
-            })
+        total_inversion = precio_compra * cantidad
+        ganancia = (precio_venta - precio_compra) * cantidad
+        porcentaje_ganancia = ((precio_venta - precio_compra) / precio_compra * 100) if precio_compra > 0 else 0
 
-        productos_por_categoria[categoria] = productos_list
+        valor_total_inventario += total_inversion
+
+        productos_por_categoria[p.categoria.id].append({
+            'obj': p,
+            'total_inversion': total_inversion,
+            'ganancia': ganancia,
+            'porcentaje_ganancia': porcentaje_ganancia,
+        })
 
     productos_filtrados = []
     if query:
-        qs = Producto.objects.filter(Q(nombre__icontains=query) | Q(marca__icontains=query))
-        for p in qs:
-            precio_compra = p.precio_compra or 0
-            precio_venta = p.precio_venta or 0
-            cantidad = p.cantidad or 0
-
-            total_inversion = precio_compra * cantidad
-            ganancia = (precio_venta - precio_compra) * cantidad
-            porcentaje_ganancia = ((precio_venta - precio_compra) / precio_compra * 100) if precio_compra > 0 else 0
-
-            productos_filtrados.append({
-                'obj': p,
-                'total_inversion': total_inversion,
-                'ganancia': ganancia,
-                'porcentaje_ganancia': porcentaje_ganancia,
-            })
+        for lista in productos_por_categoria.values():
+            productos_filtrados.extend(lista)
 
     context = {
         'categorias': categorias,
@@ -208,6 +204,7 @@ def lista_productos(request):
     }
 
     return render(request, 'inventario/lista_productos.html', context)
+
 
 
 # --------------------------

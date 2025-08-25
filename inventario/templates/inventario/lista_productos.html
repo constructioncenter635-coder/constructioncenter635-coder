@@ -79,7 +79,7 @@
             {% for categoria in categorias %}
             <div class="tab-pane fade {% if forloop.first %}show active{% endif %}" 
                  id="categoria-{{ categoria.id }}" role="tabpanel">
-                {% with productos=productos_por_categoria|get_item:categoria %}
+                {% with productos=productos_por_categoria|get_item:categoria.id %}
                 {% if productos %}
                 <p class="text-muted">Mostrando {{ productos|length }} productos.</p>
                 <div class="table-responsive">
