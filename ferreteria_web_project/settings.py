@@ -1,4 +1,5 @@
 import os
+import dj_database_url
 from pathlib import Path
 from decimal import Decimal
 
@@ -51,12 +52,18 @@ TEMPLATES = [
 WSGI_APPLICATION = 'ferreteria_web_project.wsgi.application'
 
 # --- BASE DE DATOS ---
+# Configuración por defecto (SQLite para desarrollo)
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# Si existe DATABASE_URL (por ejemplo en Render), usar PostgreSQL
+DATABASE_URL = os.getenv("DATABASE_URL")
+if DATABASE_URL:
+    DATABASES['default'] = dj_database_url.config(default=DATABASE_URL, conn_max_age=600)
 
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
