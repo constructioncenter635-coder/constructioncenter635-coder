@@ -3,6 +3,13 @@ import dj_database_url
 from pathlib import Path
 from decimal import Decimal
 
+# Redirección después de login
+LOGIN_REDIRECT_URL = 'inicio'
+
+# Redirección después de logout (opcional)
+LOGOUT_REDIRECT_URL = 'login'
+
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "center2025")
